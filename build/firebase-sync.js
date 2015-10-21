@@ -7,15 +7,22 @@
 
 (function() {
   window.FirebaseSync = (function() {
-    function FirebaseSync() {}
+    function FirebaseSync(url) {
+      this.url = url.replace(/\/$/, '');
+    }
+
+    FirebaseSync.prototype.child = function(path) {
+      path = path.split(/[\/\.]/g);
+      path = path.join('/');
+      return new FirebaseSync("" + this.url + "/" + path);
+    };
+
+    FirebaseSync.prototype.toString = function() {
+      return this.url;
+    };
 
     return FirebaseSync;
 
   })();
-
-  window.test = function() {
-    console.log('in window.test');
-    return 'hello world';
-  };
 
 }).call(this);
