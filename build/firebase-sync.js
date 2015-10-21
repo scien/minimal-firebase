@@ -14,6 +14,7 @@
   })();
 
   window.test = function() {
+    console.log('in window.test');
     return 'hello world';
   };
 
