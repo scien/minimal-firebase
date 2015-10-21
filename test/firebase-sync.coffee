@@ -36,6 +36,15 @@ describe 'Firebase Sync', ->
     firebase = new window.FirebaseSync FB_ROOT
     expect(firebase).to.be.ok()
 
+  it 'should be able to get the root firebase url', ->
+    ref = firebase.child 'test'
+    expect(ref.root()).to.equal FB_ROOT
+
+  it 'should crash if the input url is not a firebase url', ->
+    fn = window.FirebaseSync
+    url = 'https://google.com'
+    expect(fn).withArgs(url).to.throwError()
+
   it 'should trim trailing slashes from the url', ->
     ref = new window.FirebaseSync "#{FB_ROOT}/"
     expect(ref.url).to.equal FB_ROOT
