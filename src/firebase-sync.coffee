@@ -6,3 +6,5 @@
 
 class window.FirebaseSync
 
+window.test = ->
+  'hello world'

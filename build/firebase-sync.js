@@ -13,4 +13,8 @@
 
   })();
 
+  window.test = function() {
+    return 'hello world';
+  };
+
 }).call(this);

@@ -5,6 +5,7 @@
   "devDependencies": {
     "coffee-script": "1.8.x",
     "expect.js": "*",
+    "jsdom": "3.1.x",
     "mocha": "*",
     "uglify-js": "2.4.x"
   },
@@ -13,6 +14,9 @@
     "url": "git+https://github.com/scien/firebase-sync.git"
   },
   "scripts": {
+    "compile": "cake compile",
+    "prepublish": "npm run compile",
+    "pretest": "npm run compile",
     "test": "mocha"
   },
   "version": "1.0.0"

@@ -3,18 +3,15 @@
 UglifyJS = require 'uglify-js'
 coffee = require 'coffee-script'
 fs = require 'fs'
-{log} = console
 {spawn, exec} = require 'child_process'
 
-# build task: compile src -> build
-task 'build', ->
+# compile task: compile src -> build
+task 'compile', ->
 
   # read source
-  log '[build] reading src/firebase-sync.coffee'
   source = fs.readFileSync 'src/firebase-sync.coffee', 'utf8'
 
   # compile
-  log '[build] compiling to js'
   {js, sourceMap, v3SourceMap} = coffee.compile source, {
     sourceMap: true
   }
@@ -22,15 +19,11 @@ task 'build', ->
   fs.writeFileSync 'build/firebase-sync.map.js', v3SourceMap
 
   # minified
-  log '[build] minifying'
   js = UglifyJS.minify(js, {
     fromString: true
     mangle: true
   }).code
   fs.writeFileSync 'build/firebase-sync.min.js', js
-
-  # done
-  log '[build] build complete'
 
 # command executor
 run = (args...) ->
