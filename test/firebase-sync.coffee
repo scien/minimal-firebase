@@ -22,6 +22,8 @@ describe 'Firebase Sync', ->
       html: '<html><body></body></html>'
       scripts: [
         'http://code.jquery.com/jquery.js'
+        'https://raw.githubusercontent.com/ForbesLindesay/ajax/master/ajax.min.js'
+        'https://raw.githubusercontent.com/ForbesLindesay/ajax/master/index.js'
       ]
       src: [
         fs.readFileSync './build/firebase-sync.js', 'utf-8'
@@ -75,14 +77,41 @@ describe 'Firebase Sync', ->
     ref = firebase.parent()
     expect(ref).to.equal null
 
-  it 'should be able to get data (numbers)', ->
+  it 'should be able to get data (numbers)', (done) ->
     ref = firebase.child 'test/number'
-    expect(ref.value()).to.equal 42
+    ref.once (err, value) ->
+      expect(typeof value).to.equal 'number'
+      expect(value).to.equal 42
+      done()
 
-  it 'should be able to get data (strings)', ->
+  it 'should be able to get data (strings)', (done) ->
     ref = firebase.child 'test/string'
-    expect(ref.value()).to.equal 'hello world'
+    ref.once (err, value) ->
+      expect(typeof value).to.equal 'string'
+      expect(value).to.equal 'hello world'
+      done()
 
-  it 'should be able to get data (objects)', ->
+  it 'should be able to get data (objects)', (done) ->
     ref = firebase.child 'test/object'
-    expect(ref.value().foo).to.equal 'bar'
+    ref.once (err, value) ->
+      expect(typeof value).to.equal 'object'
+      expect(JSON.stringify value).to.equal '{"foo":"bar"}'
+      done()
+
+  it 'should be able to get data (arrays)', (done) ->
+    ref = firebase.child 'test/array'
+    ref.once (err, value) ->
+      expect(Array.isArray value).to.equal true
+      expect(value.toString()).to.equal "1,2,3"
+      done()
+
+  it 'should be able to get shallow data', ->
+    ref = firebase.child 'test/shallow'
+    ref.once {shallow: true}, (err, value) ->
+      expect(JSON.stringify value).to.equal '{"x":true,"y":true}'
+
+  it 'should be able to get data synchronously', ->
+    ref = firebase.child 'test/number'
+    value = ref.once()
+    expect(typeof value).to.equal 'number'
+    expect(value).to.equal 42

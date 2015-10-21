@@ -5,7 +5,17 @@
 ###
 
 # simple json requests
-get = (url, params) ->
+get = ->
+
+  # parse arguments
+  next = null
+  params = {}
+  url = null
+  for arg in arguments
+    switch typeof arg
+      when 'function' then next = arg
+      when 'object' then options = arg
+      when 'string' then url = arg
 
   # serialize params
   escape = encodeURIComponent
@@ -17,16 +27,24 @@ get = (url, params) ->
   # handle request
   result = null
   request = new XMLHttpRequest()
-  request.open 'GET', url, false
+  request.open 'GET', url, next?
   request.onreadystatechange = ->
     if request.readyState is 4
       if request.status >= 200 and request.status < 400
         try
           result = JSON.parse request.responseText
+          if next
+            next null, result
         catch err
+          next err
+      else
+        next request.responseText
   request.send()
 
-  return result
+  if next
+    return request
+  else
+    return result
 
 class window.FirebaseSync
 
@@ -73,6 +91,20 @@ class window.FirebaseSync
     @url
 
   # https://www.firebase.com/docs/web/api/query/once.html
-  # synchronous version of once('value', function(dataSnapshot){})
-  value: ->
-    return get "#{@url}.json"
+  once: ->
+
+    # parse arguments
+    options = {}
+    next = null
+    for arg in arguments
+      switch typeof arg
+        when 'object' then options = arg
+        when 'function' then next = arg
+
+    # get data
+    url = "#{@url}.json"
+    if next
+      get url, options, (err, data) ->
+        next err, data
+    else
+      return get url, options
