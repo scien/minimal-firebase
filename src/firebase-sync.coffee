@@ -4,6 +4,30 @@
 #
 ###
 
+# simple json requests
+get = (url, params) ->
+
+  # serialize params
+  escape = encodeURIComponent
+  qs = ("#{escape k}=#{escape v}" for k, v of params)
+  qs = qs.join '&'
+  qs = qs.replace '%20', '+'
+  url = "#{url}?#{qs}" if qs.length > 0
+
+  # handle request
+  result = null
+  request = new XMLHttpRequest()
+  request.open 'GET', url, false
+  request.onreadystatechange = ->
+    if request.readyState is 4
+      if request.status >= 200 and request.status < 400
+        try
+          result = JSON.parse request.responseText
+        catch err
+  request.send()
+
+  return result
+
 class window.FirebaseSync
 
   # https://www.firebase.com/docs/web/api/firebase/constructor.html
@@ -51,12 +75,4 @@ class window.FirebaseSync
   # https://www.firebase.com/docs/web/api/query/once.html
   # synchronous version of once('value', function(dataSnapshot){})
   value: ->
-    resp = $.ajax {
-      url: "#{@url}.json"
-      async: false
-      type: 'GET'
-    }
-    if resp.status is 200
-      return resp.responseJSON
-    else
-      return null
+    return get "#{@url}.json"
