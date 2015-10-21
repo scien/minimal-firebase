@@ -62,3 +62,12 @@ describe 'Firebase Sync', ->
     ref = firebase.child 'test'
     expect(firebase.toString()).to.equal firebase.url
     expect(ref.toString()).to.equal ref.url
+
+  it 'should be able to get the parent ref', ->
+    ref = firebase.child 'a/b/c'
+    parent = ref.parent()
+    expect(parent.url).to.equal "#{FB_ROOT}/a/b"
+
+  it 'should have a null parent on the root ref', ->
+    ref = firebase.parent()
+    expect(ref).to.equal null

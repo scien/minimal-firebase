@@ -26,6 +26,19 @@ class window.FirebaseSync
     # create new ref
     new FirebaseSync "#{@url}/#{path}"
 
+  # https://www.firebase.com/docs/web/api/firebase/parent.html
+  parent: ->
+    path = @url.replace @root(), ''
+    last_slash = path.lastIndexOf '/'
+    parent = path[0...last_slash]
+
+    # match firebase by returning null from the root
+    if parent is ''
+      return null
+
+    # create new ref
+    new FirebaseSync "#{@root()}#{parent}"
+
   # https://www.firebase.com/docs/web/api/firebase/root.html
   root: ->
     matches = /(https:\/\/[a-z0-9-]+\.firebaseio\.com).*/.exec @url
