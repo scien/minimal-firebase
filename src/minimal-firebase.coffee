@@ -17,8 +17,6 @@ get = ->
       when 'object' then params = arg
       when 'string' then url = arg
 
-  console.log url, params
-
   # serialize params
   escape = encodeURIComponent
   qs = ("#{escape k}=#{escape v}" for k, v of params)
@@ -61,9 +59,6 @@ class window.FirebaseSync
     }
     get url, params, next
 
-  log: ->
-    console.log 'log'
-
   # https://www.firebase.com/docs/web/api/firebase/authwithcustomtoken.html
   authWithCustomToken: (token) ->
     @token = token
@@ -87,6 +82,24 @@ class window.FirebaseSync
 
     # create new ref
     new FirebaseSync "#{@url}/#{path}"
+
+  # https://www.firebase.com/docs/web/api/firebase/createuser.html
+  createUser: (email, password, next) ->
+    matches = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec @url
+    slug = matches?[1]
+    url = "https://auth.firebase.com/v2/#{slug}/users"
+    params = {
+      email: email
+      password: password
+      _method: 'POST'
+      v: 'js-2.3.1'
+      transport: 'json'
+      suppress_status_codes: true
+    }
+    get url, params, (err, resp) ->
+      return next err if err
+      return next null, resp if resp.uid
+      return next resp.error
 
   # https://www.firebase.com/docs/web/api/firebase/parent.html
   parent: ->
@@ -117,7 +130,6 @@ class window.FirebaseSync
     params = {}
     next = null
     for arg in arguments
-      console.log typeof arg
       switch typeof arg
         when 'object' then params = arg
         when 'function' then next = arg

@@ -26,7 +26,6 @@
           url = arg;
       }
     }
-    console.log(url, params);
     escape = encodeURIComponent;
     qs = (function() {
       var results;
@@ -85,10 +84,6 @@
       return get(url, params, next);
     };
 
-    FirebaseSync.prototype.log = function() {
-      return console.log('log');
-    };
-
     FirebaseSync.prototype.authWithCustomToken = function(token) {
       return this.token = token;
     };
@@ -104,6 +99,30 @@
       path = path.split(/[\/\.]/g);
       path = path.join('/');
       return new FirebaseSync(this.url + "/" + path);
+    };
+
+    FirebaseSync.prototype.createUser = function(email, password, next) {
+      var matches, params, slug, url;
+      matches = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url);
+      slug = matches != null ? matches[1] : void 0;
+      url = "https://auth.firebase.com/v2/" + slug + "/users";
+      params = {
+        email: email,
+        password: password,
+        _method: 'POST',
+        v: 'js-2.3.1',
+        transport: 'json',
+        suppress_status_codes: true
+      };
+      return get(url, params, function(err, resp) {
+        if (err) {
+          return next(err);
+        }
+        if (resp.uid) {
+          return next(null, resp);
+        }
+        return next(resp.error);
+      });
     };
 
     FirebaseSync.prototype.parent = function() {
@@ -133,7 +152,6 @@
       next = null;
       for (i = 0, len = arguments.length; i < len; i++) {
         arg = arguments[i];
-        console.log(typeof arg);
         switch (typeof arg) {
           case 'object':
             params = arg;

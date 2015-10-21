@@ -14,14 +14,14 @@ firebase = null
 window = null
 
 # tests
-describe 'Firebase Sync', ->
+describe 'Minimal Firebase', ->
 
   # setup jsdom
   before (done) ->
     jsdom.env {
       html: '<html><body></body></html>'
       src: [
-        fs.readFileSync './build/firebase-sync.js', 'utf-8'
+        fs.readFileSync './build/minimal-firebase.js', 'utf-8'
       ]
       done: (err, _window) ->
         window = _window
@@ -120,4 +120,19 @@ describe 'Firebase Sync', ->
     firebase.authAnonymously (err, user) ->
       expect(err).to.equal null
       expect(user.provider).to.equal 'anonymous'
+      done()
+
+  it 'should be able to create a new user', (done) ->
+    email = "user_#{Date.now()}@test.com"
+    password = "hello world #{Math.random()}"
+    firebase.createUser email, password, (err, user) ->
+      expect(err).to.equal null
+      expect(user).to.have.property 'uid'
+      done()
+
+  it 'should fail trying to create an existing user', (done) ->
+    email = 'user_0@test.com'
+    password = 'hello world'
+    firebase.createUser email, password, (err, user) ->
+      expect(err?.code).to.equal 'EMAIL_TAKEN'
       done()

@@ -9,21 +9,21 @@ fs = require 'fs'
 task 'compile', ->
 
   # read source
-  source = fs.readFileSync 'src/firebase-sync.coffee', 'utf8'
+  source = fs.readFileSync 'src/minimal-firebase.coffee', 'utf8'
 
   # compile
   {js, sourceMap, v3SourceMap} = coffee.compile source, {
     sourceMap: true
   }
-  fs.writeFileSync 'build/firebase-sync.js', js
-  fs.writeFileSync 'build/firebase-sync.map.js', v3SourceMap
+  fs.writeFileSync 'build/minimal-firebase.js', js
+  fs.writeFileSync 'build/minimal-firebase.map.js', v3SourceMap
 
   # minified
   js = UglifyJS.minify(js, {
     fromString: true
     mangle: true
   }).code
-  fs.writeFileSync 'build/firebase-sync.min.js', js
+  fs.writeFileSync 'build/minimal-firebase.min.js', js
 
 # command executor
 run = (args...) ->
