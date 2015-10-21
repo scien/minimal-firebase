@@ -1,0 +1,19 @@
+{
+  "author": "Bryant Williams <b.n.williams@gmail.com>",
+  "name": "firebase-sync",
+  "description": "Use Firebase synchronously through the REST api",
+  "devDependencies": {
+    "coffee-script": "1.8.x",
+    "expect.js": "*",
+    "mocha": "*",
+    "uglify-js": "2.4.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scien/firebase-sync.git"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "version": "1.0.0"
+}
