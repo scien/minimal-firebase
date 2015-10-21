@@ -48,6 +48,10 @@ get = ->
 
 class window.FirebaseSync
 
+  # https://www.firebase.com/docs/web/api/firebase/authwithcustomtoken.html
+  authWithCustomToken: (token) ->
+    @token = token
+
   # https://www.firebase.com/docs/web/api/firebase/constructor.html
   constructor: (url) ->
 
@@ -100,6 +104,10 @@ class window.FirebaseSync
       switch typeof arg
         when 'object' then options = arg
         when 'function' then next = arg
+
+    # auth
+    if @token
+      options.auth = @token
 
     # get data
     url = "#{@url}.json"
