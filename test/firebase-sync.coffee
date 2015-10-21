@@ -20,11 +20,6 @@ describe 'Firebase Sync', ->
   before (done) ->
     jsdom.env {
       html: '<html><body></body></html>'
-      scripts: [
-        'http://code.jquery.com/jquery.js'
-        'https://raw.githubusercontent.com/ForbesLindesay/ajax/master/ajax.min.js'
-        'https://raw.githubusercontent.com/ForbesLindesay/ajax/master/index.js'
-      ]
       src: [
         fs.readFileSync './build/firebase-sync.js', 'utf-8'
       ]
@@ -80,6 +75,7 @@ describe 'Firebase Sync', ->
   it 'should be able to get data (numbers)', (done) ->
     ref = firebase.child 'test/number'
     ref.once (err, value) ->
+      expect(err).to.equal null
       expect(typeof value).to.equal 'number'
       expect(value).to.equal 42
       done()
@@ -87,6 +83,7 @@ describe 'Firebase Sync', ->
   it 'should be able to get data (strings)', (done) ->
     ref = firebase.child 'test/string'
     ref.once (err, value) ->
+      expect(err).to.equal null
       expect(typeof value).to.equal 'string'
       expect(value).to.equal 'hello world'
       done()
@@ -94,6 +91,7 @@ describe 'Firebase Sync', ->
   it 'should be able to get data (objects)', (done) ->
     ref = firebase.child 'test/object'
     ref.once (err, value) ->
+      expect(err).to.equal null
       expect(typeof value).to.equal 'object'
       expect(JSON.stringify value).to.equal '{"foo":"bar"}'
       done()
@@ -101,6 +99,7 @@ describe 'Firebase Sync', ->
   it 'should be able to get data (arrays)', (done) ->
     ref = firebase.child 'test/array'
     ref.once (err, value) ->
+      expect(err).to.equal null
       expect(Array.isArray value).to.equal true
       expect(value.toString()).to.equal "1,2,3"
       done()
@@ -108,6 +107,7 @@ describe 'Firebase Sync', ->
   it 'should be able to get shallow data', ->
     ref = firebase.child 'test/shallow'
     ref.once {shallow: true}, (err, value) ->
+      expect(err).to.equal null
       expect(JSON.stringify value).to.equal '{"x":true,"y":true}'
 
   it 'should be able to get data synchronously', ->
@@ -115,3 +115,9 @@ describe 'Firebase Sync', ->
     value = ref.once()
     expect(typeof value).to.equal 'number'
     expect(value).to.equal 42
+
+  it 'should be able to auth anonymously', (done) ->
+    firebase.authAnonymously (err, user) ->
+      expect(err).to.equal null
+      expect(user.provider).to.equal 'anonymous'
+      done()

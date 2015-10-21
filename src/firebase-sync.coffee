@@ -14,8 +14,10 @@ get = ->
   for arg in arguments
     switch typeof arg
       when 'function' then next = arg
-      when 'object' then options = arg
+      when 'object' then params = arg
       when 'string' then url = arg
+
+  console.log url, params
 
   # serialize params
   escape = encodeURIComponent
@@ -47,6 +49,20 @@ get = ->
     return result
 
 class window.FirebaseSync
+
+  authAnonymously: (next) ->
+    matches = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec @url
+    slug = matches?[1]
+    url = "https://auth.firebase.com/v2/#{slug}/auth/anonymous"
+    params = {
+      v: 'js-2.2.9'
+      transport: 'json'
+      supress_codes: true
+    }
+    get url, params, next
+
+  log: ->
+    console.log 'log'
 
   # https://www.firebase.com/docs/web/api/firebase/authwithcustomtoken.html
   authWithCustomToken: (token) ->
@@ -98,21 +114,21 @@ class window.FirebaseSync
   once: ->
 
     # parse arguments
-    options = {}
+    params = {}
     next = null
     for arg in arguments
+      console.log typeof arg
       switch typeof arg
-        when 'object' then options = arg
+        when 'object' then params = arg
         when 'function' then next = arg
 
     # auth
     if @token
-      options.auth = @token
+      params.auth = @token
 
     # get data
     url = "#{@url}.json"
     if next
-      get url, options, (err, data) ->
-        next err, data
+      get url, params, next
     else
-      return get url, options
+      return get url, params

@@ -8,8 +8,25 @@
 (function() {
   var get;
 
-  get = function(url, params, next) {
-    var escape, k, qs, request, result, v;
+  get = function() {
+    var arg, escape, i, k, len, next, params, qs, request, result, url, v;
+    next = null;
+    params = {};
+    url = null;
+    for (i = 0, len = arguments.length; i < len; i++) {
+      arg = arguments[i];
+      switch (typeof arg) {
+        case 'function':
+          next = arg;
+          break;
+        case 'object':
+          params = arg;
+          break;
+        case 'string':
+          url = arg;
+      }
+    }
+    console.log(url, params);
     escape = encodeURIComponent;
     qs = (function() {
       var results;
@@ -55,6 +72,27 @@
   };
 
   window.FirebaseSync = (function() {
+    FirebaseSync.prototype.authAnonymously = function(next) {
+      var matches, params, slug, url;
+      matches = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url);
+      slug = matches != null ? matches[1] : void 0;
+      url = "https://auth.firebase.com/v2/" + slug + "/auth/anonymous";
+      params = {
+        v: 'js-2.2.9',
+        transport: 'json',
+        supress_codes: true
+      };
+      return get(url, params, next);
+    };
+
+    FirebaseSync.prototype.log = function() {
+      return console.log('log');
+    };
+
+    FirebaseSync.prototype.authWithCustomToken = function(token) {
+      return this.token = token;
+    };
+
     function FirebaseSync(url) {
       this.url = url.replace(/\/$/, '');
       if (!this.root()) {
@@ -90,26 +128,28 @@
     };
 
     FirebaseSync.prototype.once = function() {
-      var arg, i, len, next, options, url;
-      options = {};
+      var arg, i, len, next, params, url;
+      params = {};
       next = null;
       for (i = 0, len = arguments.length; i < len; i++) {
         arg = arguments[i];
+        console.log(typeof arg);
         switch (typeof arg) {
           case 'object':
-            options = arg;
+            params = arg;
             break;
           case 'function':
             next = arg;
         }
       }
+      if (this.token) {
+        params.auth = this.token;
+      }
       url = this.url + ".json";
       if (next) {
-        return get(url, options, function(err, data) {
-          return next(err, data);
-        });
+        return get(url, params, next);
       } else {
-        return get(url, options);
+        return get(url, params);
       }
     };
 
