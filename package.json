@@ -3,7 +3,7 @@
   "name": "firebase-sync",
   "description": "Use Firebase synchronously through the REST api",
   "devDependencies": {
-    "coffee-script": "1.8.x",
+    "coffee-script": "1.9.x",
     "expect.js": "*",
     "jsdom": "3.*",
     "mocha": "*",
