@@ -47,3 +47,16 @@ class window.FirebaseSync
   # https://www.firebase.com/docs/web/api/firebase/tostring.html
   toString: ->
     @url
+
+  # https://www.firebase.com/docs/web/api/query/once.html
+  # synchronous version of once('value', function(dataSnapshot){})
+  value: ->
+    resp = $.ajax {
+      url: "#{@url}.json"
+      async: false
+      type: 'GET'
+    }
+    if resp.status is 200
+      return resp.responseJSON
+    else
+      return null

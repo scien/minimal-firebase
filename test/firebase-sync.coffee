@@ -20,6 +20,9 @@ describe 'Firebase Sync', ->
   before (done) ->
     jsdom.env {
       html: '<html><body></body></html>'
+      scripts: [
+        'http://code.jquery.com/jquery.js'
+      ]
       src: [
         fs.readFileSync './build/firebase-sync.js', 'utf-8'
       ]
@@ -71,3 +74,15 @@ describe 'Firebase Sync', ->
   it 'should have a null parent on the root ref', ->
     ref = firebase.parent()
     expect(ref).to.equal null
+
+  it 'should be able to get data (numbers)', ->
+    ref = firebase.child 'test/number'
+    expect(ref.value()).to.equal 42
+
+  it 'should be able to get data (strings)', ->
+    ref = firebase.child 'test/string'
+    expect(ref.value()).to.equal 'hello world'
+
+  it 'should be able to get data (objects)', ->
+    ref = firebase.child 'test/object'
+    expect(ref.value().foo).to.equal 'bar'
