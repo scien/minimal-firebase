@@ -8,23 +8,24 @@ expect = require 'expect.js'
 fs = require 'fs'
 jsdom = require 'jsdom'
 
+# locals
+window = null
+
 # tests
 describe 'Firebase Sync', ->
 
-  jsdom.env {
-    html: '<html><body></body></html>'
-    src: [
-      fs.readFileSync './build/firebase-sync.js', 'utf-8'
-    ]
-    done: (err, window) ->
-      jsdom.getVirtualConsole(window).sendTo console
-
-      console.log 'it'
-      it 'is defined', (done) ->
-        expect(window.FirebaseSync).to.be.ok()
+  # setup jsdom
+  before (done) ->
+    jsdom.env {
+      html: '<html><body></body></html>'
+      src: [
+        fs.readFileSync './build/firebase-sync.js', 'utf-8'
+      ]
+      done: (err, _window) ->
+        window = _window
+        jsdom.getVirtualConsole(window).sendTo console
         done()
-
-      run()
   }
 
-
+  it 'is defined', ->
+    expect(window.FirebaseSync).to.be.ok()

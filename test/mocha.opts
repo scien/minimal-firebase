@@ -1,1 +1,1 @@
---delay --compilers coffee:coffee-script/register
+--compilers coffee:coffee-script/register
