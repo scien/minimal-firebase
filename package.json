@@ -1,7 +1,7 @@
 {
   "author": "Bryant Williams <b.n.williams@gmail.com>",
-  "name": "firebase-sync",
-  "description": "Use Firebase synchronously through the REST api",
+  "name": "minimal-firebase",
+  "description": "Minimal Firebase JS SDK",
   "devDependencies": {
     "coffee-script": "1.9.x",
     "expect.js": "*",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/scien/firebase-sync.git"
+    "url": "git+https://github.com/scien/minimal-firebase.git"
   },
   "scripts": {
     "compile": "cake compile",

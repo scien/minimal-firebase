@@ -70,8 +70,8 @@
     }
   };
 
-  window.FirebaseSync = (function() {
-    FirebaseSync.prototype.authAnonymously = function(next) {
+  window.MinimalFirebase = (function() {
+    MinimalFirebase.prototype.authAnonymously = function(next) {
       var params, ref, slug, url;
       slug = (ref = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url)) != null ? ref[1] : void 0;
       url = "https://auth.firebase.com/v2/" + slug + "/auth/anonymous";
@@ -83,7 +83,7 @@
       return get(url, params, next);
     };
 
-    FirebaseSync.prototype.authWithPassword = function(email, password, next) {
+    MinimalFirebase.prototype.authWithPassword = function(email, password, next) {
       var params, ref, slug, url;
       slug = (ref = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url)) != null ? ref[1] : void 0;
       url = "https://auth.firebase.com/v2/" + slug + "/auth/password";
@@ -105,11 +105,11 @@
       });
     };
 
-    FirebaseSync.prototype.authWithCustomToken = function(token) {
+    MinimalFirebase.prototype.authWithCustomToken = function(token) {
       return this.token = token;
     };
 
-    function FirebaseSync(url) {
+    function MinimalFirebase(url) {
       var auth;
       this.url = url.replace(/\/$/, '');
       if (!this.root()) {
@@ -121,13 +121,13 @@
       }
     }
 
-    FirebaseSync.prototype.child = function(path) {
+    MinimalFirebase.prototype.child = function(path) {
       path = path.split(/[\/\.]/g);
       path = path.join('/');
-      return new FirebaseSync(this.url + "/" + path);
+      return new MinimalFirebase(this.url + "/" + path);
     };
 
-    FirebaseSync.prototype.createUser = function(email, password, next) {
+    MinimalFirebase.prototype.createUser = function(email, password, next) {
       var params, ref, slug, url;
       slug = (ref = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url)) != null ? ref[1] : void 0;
       url = "https://auth.firebase.com/v2/" + slug + "/users";
@@ -150,13 +150,13 @@
       });
     };
 
-    FirebaseSync.prototype.getAuth = function() {
+    MinimalFirebase.prototype.getAuth = function() {
       var ref, slug;
       slug = (ref = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url)) != null ? ref[1] : void 0;
       return typeof localStorage !== "undefined" && localStorage !== null ? localStorage["firebase:session::" + slug] : void 0;
     };
 
-    FirebaseSync.prototype.key = function() {
+    MinimalFirebase.prototype.key = function() {
       var last_slash;
       if (this.url === this.root()) {
         return null;
@@ -165,7 +165,7 @@
       return this.url.slice(last_slash + 1);
     };
 
-    FirebaseSync.prototype.parent = function() {
+    MinimalFirebase.prototype.parent = function() {
       var last_slash, parent, path;
       path = this.url.replace(this.root(), '');
       last_slash = path.lastIndexOf('/');
@@ -173,20 +173,20 @@
       if (parent === '') {
         return null;
       }
-      return new FirebaseSync("" + (this.root()) + parent);
+      return new MinimalFirebase("" + (this.root()) + parent);
     };
 
-    FirebaseSync.prototype.root = function() {
+    MinimalFirebase.prototype.root = function() {
       var matches;
       matches = /(https:\/\/[a-z0-9-]+\.firebaseio\.com).*/.exec(this.url);
       return matches != null ? matches[1] : void 0;
     };
 
-    FirebaseSync.prototype.toString = function() {
+    MinimalFirebase.prototype.toString = function() {
       return this.url;
     };
 
-    FirebaseSync.prototype.once = function() {
+    MinimalFirebase.prototype.once = function() {
       var arg, i, len, next, params, url;
       params = {};
       next = null;
@@ -211,7 +211,7 @@
       }
     };
 
-    return FirebaseSync;
+    return MinimalFirebase;
 
   })();
 

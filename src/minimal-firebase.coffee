@@ -46,7 +46,7 @@ get = ->
   else
     return result
 
-class window.FirebaseSync
+class window.MinimalFirebase
 
   # https://www.firebase.com/docs/web/api/firebase/authanonymously.html
   authAnonymously: (next) ->
@@ -102,7 +102,7 @@ class window.FirebaseSync
     path = path.join '/'
 
     # create new ref
-    new FirebaseSync "#{@url}/#{path}"
+    new MinimalFirebase "#{@url}/#{path}"
 
   # https://www.firebase.com/docs/web/api/firebase/createuser.html
   createUser: (email, password, next) ->
@@ -143,7 +143,7 @@ class window.FirebaseSync
       return null
 
     # create new ref
-    new FirebaseSync "#{@root()}#{parent}"
+    new MinimalFirebase "#{@root()}#{parent}"
 
   # https://www.firebase.com/docs/web/api/firebase/root.html
   root: ->
