@@ -50,8 +50,7 @@ class window.FirebaseSync
 
   # https://www.firebase.com/docs/web/api/firebase/authanonymously.html
   authAnonymously: (next) ->
-    matches = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec @url
-    slug = matches?[1]
+    slug = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(@url)?[1]
     url = "https://auth.firebase.com/v2/#{slug}/auth/anonymous"
     params = {
       suppress_status_codes: true
@@ -62,8 +61,7 @@ class window.FirebaseSync
 
   # https://www.firebase.com/docs/web/api/firebase/authwithpassword.html
   authWithPassword: (email, password, next) ->
-    matches = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec @url
-    slug = matches?[1]
+    slug = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(@url)?[1]
     url = "https://auth.firebase.com/v2/#{slug}/auth/password"
     params = {
       email: email
@@ -91,6 +89,11 @@ class window.FirebaseSync
     if not @root()
       throw new Error "Invalid firebase url: #{url}"
 
+    # check if the user is authenticated
+    auth = @getAuth()
+    if auth.token
+      @authWithCustomToken auth.token
+
   # https://www.firebase.com/docs/web/api/firebase/child.html
   child: (path) ->
 
@@ -103,8 +106,7 @@ class window.FirebaseSync
 
   # https://www.firebase.com/docs/web/api/firebase/createuser.html
   createUser: (email, password, next) ->
-    matches = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec @url
-    slug = matches?[1]
+    slug = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(@url)?[1]
     url = "https://auth.firebase.com/v2/#{slug}/users"
     params = {
       _method: 'POST'
@@ -118,6 +120,11 @@ class window.FirebaseSync
       return next err if err
       return next resp.error if resp.error
       next null, resp
+
+  # https://www.firebase.com/docs/web/api/firebase/getauth.html
+  getAuth: ->
+    slug = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(@url)?[1]
+    localStorage["firebase:session::#{slug}"]
 
   # https://www.firebase.com/docs/web/api/firebase/parent.html
   parent: ->

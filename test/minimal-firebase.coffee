@@ -93,7 +93,7 @@ describe 'Minimal Firebase', ->
     ref.once (err, value) ->
       expect(err).to.equal null
       expect(typeof value).to.equal 'object'
-      expect(JSON.stringify value).to.equal '{"foo":"bar"}'
+      expect(value).to.eql {foo: 'bar'}
       done()
 
   it 'should be able to get data (arrays)', (done) ->
@@ -108,7 +108,7 @@ describe 'Minimal Firebase', ->
     ref = firebase.child 'test/shallow'
     ref.once {shallow: true}, (err, value) ->
       expect(err).to.equal null
-      expect(JSON.stringify value).to.equal '{"x":true,"y":true}'
+      expect(value).to.eql {x: true, y: true}
 
   it 'should be able to get data synchronously', ->
     ref = firebase.child 'test/number'
