@@ -15,10 +15,6 @@ Comparing to the sizes above, it is currently 5.7k, 2.8k, and 1.4k.
 [![Build Status](https://travis-ci.org/scien/minimal-firebase.svg?style=flat-square)](https://travis-ci.org/scien/minimal-firebase)
 [![NPM version](http://img.shields.io/npm/v/minimal-firebase.svg?style=flat-square)](https://www.npmjs.org/package/minimal-firebase)
 
-## Features
-
-| Feature | Supported | Unsupported |
-
 ## Usage
 
 1. Include MinimalFirebase:
