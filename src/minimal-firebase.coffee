@@ -48,16 +48,34 @@ get = ->
 
 class window.FirebaseSync
 
+  # https://www.firebase.com/docs/web/api/firebase/authanonymously.html
   authAnonymously: (next) ->
     matches = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec @url
     slug = matches?[1]
     url = "https://auth.firebase.com/v2/#{slug}/auth/anonymous"
     params = {
-      v: 'js-2.2.9'
+      suppress_status_codes: true
       transport: 'json'
-      supress_codes: true
+      v: 'js-2.2.9'
     }
     get url, params, next
+
+  # https://www.firebase.com/docs/web/api/firebase/authwithpassword.html
+  authWithPassword: (email, password, next) ->
+    matches = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec @url
+    slug = matches?[1]
+    url = "https://auth.firebase.com/v2/#{slug}/auth/password"
+    params = {
+      email: email
+      password: password
+      suppress_status_codes: true
+      transport: 'json'
+      v: 'js-2.2.9'
+    }
+    get url, params, (err, resp) ->
+      return next err if err
+      return next resp.error if resp.error
+      next null, resp
 
   # https://www.firebase.com/docs/web/api/firebase/authwithcustomtoken.html
   authWithCustomToken: (token) ->
@@ -89,17 +107,17 @@ class window.FirebaseSync
     slug = matches?[1]
     url = "https://auth.firebase.com/v2/#{slug}/users"
     params = {
+      _method: 'POST'
       email: email
       password: password
-      _method: 'POST'
-      v: 'js-2.3.1'
-      transport: 'json'
       suppress_status_codes: true
+      transport: 'json'
+      v: 'js-2.3.1'
     }
     get url, params, (err, resp) ->
       return next err if err
-      return next null, resp if resp.uid
-      return next resp.error
+      return next resp.error if resp.error
+      next null, resp
 
   # https://www.firebase.com/docs/web/api/firebase/parent.html
   parent: ->

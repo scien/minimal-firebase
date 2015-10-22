@@ -131,8 +131,23 @@ describe 'Minimal Firebase', ->
       done()
 
   it 'should fail trying to create an existing user', (done) ->
-    email = 'user_0@test.com'
-    password = 'hello world'
+    email = 'hello@test.com'
+    password = 'world'
     firebase.createUser email, password, (err, user) ->
       expect(err?.code).to.equal 'EMAIL_TAKEN'
+      done()
+
+  it 'should be able to auth with password', (done) ->
+    email = 'hello@test.com'
+    password = 'world'
+    firebase.authWithPassword email, password, (err, user) ->
+      expect(err).to.equal null
+      expect(user.uid).to.equal '988655a2-e4cc-4651-b095-292784be4d4c'
+      done()
+
+  it 'should catch invalid password for auth with password', (done) ->
+    email = 'hello@test.com'
+    password = 'invalid'
+    firebase.authWithPassword email, password, (err, user) ->
+      expect(err?.code).to.equal 'INVALID_PASSWORD'
       done()

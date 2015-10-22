@@ -77,11 +77,34 @@
       slug = matches != null ? matches[1] : void 0;
       url = "https://auth.firebase.com/v2/" + slug + "/auth/anonymous";
       params = {
-        v: 'js-2.2.9',
+        suppress_status_codes: true,
         transport: 'json',
-        supress_codes: true
+        v: 'js-2.2.9'
       };
       return get(url, params, next);
+    };
+
+    FirebaseSync.prototype.authWithPassword = function(email, password, next) {
+      var matches, params, slug, url;
+      matches = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url);
+      slug = matches != null ? matches[1] : void 0;
+      url = "https://auth.firebase.com/v2/" + slug + "/auth/password";
+      params = {
+        email: email,
+        password: password,
+        suppress_status_codes: true,
+        transport: 'json',
+        v: 'js-2.2.9'
+      };
+      return get(url, params, function(err, resp) {
+        if (err) {
+          return next(err);
+        }
+        if (resp.error) {
+          return next(resp.error);
+        }
+        return next(null, resp);
+      });
     };
 
     FirebaseSync.prototype.authWithCustomToken = function(token) {
@@ -107,21 +130,21 @@
       slug = matches != null ? matches[1] : void 0;
       url = "https://auth.firebase.com/v2/" + slug + "/users";
       params = {
+        _method: 'POST',
         email: email,
         password: password,
-        _method: 'POST',
-        v: 'js-2.3.1',
+        suppress_status_codes: true,
         transport: 'json',
-        suppress_status_codes: true
+        v: 'js-2.3.1'
       };
       return get(url, params, function(err, resp) {
         if (err) {
           return next(err);
         }
-        if (resp.uid) {
-          return next(null, resp);
+        if (resp.error) {
+          return next(resp.error);
         }
-        return next(resp.error);
+        return next(null, resp);
       });
     };
 
