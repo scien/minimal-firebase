@@ -39,9 +39,9 @@ Comparing to the sizes above, it is currently 5.7k, 2.8k, and 1.4k.
   child.once (err, value) ->
     console.log "child value = #{value}"
   child.once {shallow: true}, (err, value) ->
-    console.log "child shallow value = #{value}"
+    console.log "child shallow value", value
   child.once {format: 'export'}, (err, value) ->
-    console.log "child shallow value = #{value}"
+    console.log "child value with priorities", value
 
   # load data synchronously
   value = child.once()
