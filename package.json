@@ -9,6 +9,7 @@
     "mocha": "*",
     "uglify-js": "2.4.x"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/scien/minimal-firebase.git"
