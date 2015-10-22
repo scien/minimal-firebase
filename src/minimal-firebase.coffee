@@ -91,7 +91,7 @@ class window.FirebaseSync
 
     # check if the user is authenticated
     auth = @getAuth()
-    if auth.token
+    if auth?.token
       @authWithCustomToken auth.token
 
   # https://www.firebase.com/docs/web/api/firebase/child.html
@@ -124,7 +124,13 @@ class window.FirebaseSync
   # https://www.firebase.com/docs/web/api/firebase/getauth.html
   getAuth: ->
     slug = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(@url)?[1]
-    localStorage["firebase:session::#{slug}"]
+    localStorage?["firebase:session::#{slug}"]
+
+  # https://www.firebase.com/docs/web/api/firebase/key.html
+  key: ->
+    return null if @url is @root()
+    last_slash = @url.lastIndexOf '/'
+    return @url[last_slash + 1...]
 
   # https://www.firebase.com/docs/web/api/firebase/parent.html
   parent: ->

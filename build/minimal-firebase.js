@@ -72,9 +72,8 @@
 
   window.FirebaseSync = (function() {
     FirebaseSync.prototype.authAnonymously = function(next) {
-      var matches, params, slug, url;
-      matches = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url);
-      slug = matches != null ? matches[1] : void 0;
+      var params, ref, slug, url;
+      slug = (ref = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url)) != null ? ref[1] : void 0;
       url = "https://auth.firebase.com/v2/" + slug + "/auth/anonymous";
       params = {
         suppress_status_codes: true,
@@ -85,9 +84,8 @@
     };
 
     FirebaseSync.prototype.authWithPassword = function(email, password, next) {
-      var matches, params, slug, url;
-      matches = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url);
-      slug = matches != null ? matches[1] : void 0;
+      var params, ref, slug, url;
+      slug = (ref = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url)) != null ? ref[1] : void 0;
       url = "https://auth.firebase.com/v2/" + slug + "/auth/password";
       params = {
         email: email,
@@ -112,9 +110,14 @@
     };
 
     function FirebaseSync(url) {
+      var auth;
       this.url = url.replace(/\/$/, '');
       if (!this.root()) {
         throw new Error("Invalid firebase url: " + url);
+      }
+      auth = this.getAuth();
+      if (auth != null ? auth.token : void 0) {
+        this.authWithCustomToken(auth.token);
       }
     }
 
@@ -125,9 +128,8 @@
     };
 
     FirebaseSync.prototype.createUser = function(email, password, next) {
-      var matches, params, slug, url;
-      matches = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url);
-      slug = matches != null ? matches[1] : void 0;
+      var params, ref, slug, url;
+      slug = (ref = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url)) != null ? ref[1] : void 0;
       url = "https://auth.firebase.com/v2/" + slug + "/users";
       params = {
         _method: 'POST',
@@ -146,6 +148,21 @@
         }
         return next(null, resp);
       });
+    };
+
+    FirebaseSync.prototype.getAuth = function() {
+      var ref, slug;
+      slug = (ref = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url)) != null ? ref[1] : void 0;
+      return typeof localStorage !== "undefined" && localStorage !== null ? localStorage["firebase:session::" + slug] : void 0;
+    };
+
+    FirebaseSync.prototype.key = function() {
+      var last_slash;
+      if (this.url === this.root()) {
+        return null;
+      }
+      last_slash = this.url.lastIndexOf('/');
+      return this.url.slice(last_slash + 1);
     };
 
     FirebaseSync.prototype.parent = function() {

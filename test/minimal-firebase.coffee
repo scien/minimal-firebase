@@ -63,6 +63,11 @@ describe 'Minimal Firebase', ->
     expect(firebase.toString()).to.equal firebase.url
     expect(ref.toString()).to.equal ref.url
 
+  it 'should be able to get the key of the ref', ->
+    ref = firebase.child 'a/b/c'
+    expect(ref.key()).to.equal 'c'
+    expect(firebase.key()).to.equal null
+
   it 'should be able to get the parent ref', ->
     ref = firebase.child 'a/b/c'
     parent = ref.parent()
