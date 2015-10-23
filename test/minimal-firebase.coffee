@@ -137,6 +137,27 @@ describe 'Minimal Firebase', ->
       expect(typeof value).to.equal 'number'
       expect(value).to.equal 42
 
+  describe 'advanced queries', ->
+
+    it 'should be able to order by key', (done) ->
+      ref = firebase.child 'test/dataset_1'
+      ref.once {orderBy: '$key', equalTo: 'cat'}, (err, value) ->
+        expect(value.cat.title).to.equal 'Cat'
+        done()
+
+    it 'should be able to filter on a string', (done) ->
+      ref = firebase.child 'test/dataset_1'
+      ref.once {orderBy: 'title', equalTo: 'Cat'}, (err, value) ->
+        expect(value.cat.title).to.equal 'Cat'
+        done()
+
+    it 'should be able to filter on a number', (done) ->
+      ref = firebase.child 'test/dataset_1'
+      ref.once {orderBy: 'legs', equalTo: 4}, (err, value) ->
+        animals = (v for k, v of value)
+        expect(animals.length).to.equal 3
+        done()
+
   describe 'authentication', ->
 
     it 'should be able to auth anonymously', (done) ->

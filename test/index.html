@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Minimal Firebase</title>
+  </head>
+  <body>
+    <script type="text/javascript" src="../build/minimal-firebase.js"></script>
+    <script type="text/javascript">
+      var FB_ROOT = 'https://minimal-firebase.firebaseio.com';
+      window.firebase = new MinimalFirebase(FB_ROOT);
+
+      var ref = firebase.child("test/dataset_1");
+      console.log(ref.once());
+      console.log(ref.once({orderBy: 'legs', equalTo: 4}));
+      console.log(ref.once({orderBy: '$key', equalTo: 'cat'}));
+    </script>
+  </body>
+</html>

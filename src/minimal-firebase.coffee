@@ -165,6 +165,12 @@ class window.MinimalFirebase
         when 'object' then params = arg
         when 'function' then next = arg
 
+    # modify query params
+    filters = ['orderBy', 'equalTo', 'startAt', 'endAt']
+    for filter in filters
+      if typeof params[filter] is 'string'
+        params[filter] = "\"#{params[filter]}\""
+
     # auth
     if @token
       params.auth = @token

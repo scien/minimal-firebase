@@ -187,7 +187,7 @@
     };
 
     MinimalFirebase.prototype.once = function() {
-      var arg, i, len, next, params, url;
+      var arg, filter, filters, i, j, len, len1, next, params, url;
       params = {};
       next = null;
       for (i = 0, len = arguments.length; i < len; i++) {
@@ -198,6 +198,13 @@
             break;
           case 'function':
             next = arg;
+        }
+      }
+      filters = ['orderBy', 'equalTo', 'startAt', 'endAt'];
+      for (j = 0, len1 = filters.length; j < len1; j++) {
+        filter = filters[j];
+        if (typeof params[filter] === 'string') {
+          params[filter] = "\"" + params[filter] + "\"";
         }
       }
       if (this.token) {
