@@ -46,7 +46,7 @@ get = ->
   else
     return result
 
-class window.MinimalFirebase
+class firebase
 
   # https://www.firebase.com/docs/web/api/firebase/authanonymously.html
   authAnonymously: (next) ->
@@ -181,3 +181,6 @@ class window.MinimalFirebase
       get url, params, next
     else
       return get url, params
+
+window.MinimalFirebase = firebase
+module.exports = firebase
