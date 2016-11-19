@@ -3,11 +3,11 @@
   "name": "minimal-firebase",
   "description": "Minimal Firebase JS SDK",
   "devDependencies": {
-    "coffee-script": "~1.11.1",
+    "coffee-script": "1.9.x",
     "expect.js": "*",
-    "jsdom": "^9.8.3",
+    "jsdom": "3.*",
     "mocha": "*",
-    "uglify-js": "~2.7.4"
+    "uglify-js": "2.4.x"
   },
   "license": "MIT",
   "repository": {
