@@ -7,7 +7,7 @@
     "expect.js": "*",
     "jsdom": "3.*",
     "mocha": "*",
-    "uglify-js": "2.4.x"
+    "uglify-js": "~2.7.5"
   },
   "license": "MIT",
   "repository": {
