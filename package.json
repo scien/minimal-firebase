@@ -3,7 +3,7 @@
   "name": "minimal-firebase",
   "description": "Minimal Firebase JS SDK",
   "devDependencies": {
-    "coffee-script": "1.9.x",
+    "coffee-script": "~1.12.0",
     "expect.js": "*",
     "jsdom": "3.*",
     "mocha": "*",
