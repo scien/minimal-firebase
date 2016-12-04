@@ -6,7 +6,7 @@
  */
 
 (function() {
-  var get;
+  var firebase, get;
 
   get = function() {
     var arg, escape, i, k, len, next, params, qs, request, result, url, v;
@@ -70,8 +70,8 @@
     }
   };
 
-  window.MinimalFirebase = (function() {
-    MinimalFirebase.prototype.authAnonymously = function(next) {
+  firebase = (function() {
+    firebase.prototype.authAnonymously = function(next) {
       var params, ref, slug, url;
       slug = (ref = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url)) != null ? ref[1] : void 0;
       url = "https://auth.firebase.com/v2/" + slug + "/auth/anonymous";
@@ -83,7 +83,7 @@
       return get(url, params, next);
     };
 
-    MinimalFirebase.prototype.authWithPassword = function(email, password, next) {
+    firebase.prototype.authWithPassword = function(email, password, next) {
       var params, ref, slug, url;
       slug = (ref = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url)) != null ? ref[1] : void 0;
       url = "https://auth.firebase.com/v2/" + slug + "/auth/password";
@@ -105,11 +105,11 @@
       });
     };
 
-    MinimalFirebase.prototype.authWithCustomToken = function(token) {
+    firebase.prototype.authWithCustomToken = function(token) {
       return this.token = token;
     };
 
-    function MinimalFirebase(url) {
+    function firebase(url) {
       var auth;
       this.url = url.replace(/\/$/, '');
       if (!this.root()) {
@@ -121,13 +121,13 @@
       }
     }
 
-    MinimalFirebase.prototype.child = function(path) {
+    firebase.prototype.child = function(path) {
       path = path.split(/[\/\.]/g);
       path = path.join('/');
       return new MinimalFirebase(this.url + "/" + path);
     };
 
-    MinimalFirebase.prototype.createUser = function(email, password, next) {
+    firebase.prototype.createUser = function(email, password, next) {
       var params, ref, slug, url;
       slug = (ref = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url)) != null ? ref[1] : void 0;
       url = "https://auth.firebase.com/v2/" + slug + "/users";
@@ -150,13 +150,13 @@
       });
     };
 
-    MinimalFirebase.prototype.getAuth = function() {
+    firebase.prototype.getAuth = function() {
       var ref, slug;
       slug = (ref = /https:\/\/([a-z0-9-]+)\.firebaseio\.com.*/.exec(this.url)) != null ? ref[1] : void 0;
       return typeof localStorage !== "undefined" && localStorage !== null ? localStorage["firebase:session::" + slug] : void 0;
     };
 
-    MinimalFirebase.prototype.key = function() {
+    firebase.prototype.key = function() {
       var last_slash;
       if (this.url === this.root()) {
         return null;
@@ -165,7 +165,7 @@
       return this.url.slice(last_slash + 1);
     };
 
-    MinimalFirebase.prototype.parent = function() {
+    firebase.prototype.parent = function() {
       var last_slash, parent, path;
       path = this.url.replace(this.root(), '');
       last_slash = path.lastIndexOf('/');
@@ -176,17 +176,17 @@
       return new MinimalFirebase("" + (this.root()) + parent);
     };
 
-    MinimalFirebase.prototype.root = function() {
+    firebase.prototype.root = function() {
       var matches;
       matches = /(https:\/\/[a-z0-9-]+\.firebaseio\.com).*/.exec(this.url);
       return matches != null ? matches[1] : void 0;
     };
 
-    MinimalFirebase.prototype.toString = function() {
+    firebase.prototype.toString = function() {
       return this.url;
     };
 
-    MinimalFirebase.prototype.once = function() {
+    firebase.prototype.once = function() {
       var arg, filter, filters, i, j, len, len1, next, params, url;
       params = {};
       next = null;
@@ -218,8 +218,12 @@
       }
     };
 
-    return MinimalFirebase;
+    return firebase;
 
   })();
+
+  window.MinimalFirebase = firebase;
+
+  module.exports = firebase;
 
 }).call(this);
